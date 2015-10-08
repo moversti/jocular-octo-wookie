@@ -1,11 +1,15 @@
 package ohtu;
 
 public class TennisGame {
-    
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+
+    private static final int OVER_FOURTY = 4;
+    private static final int ONE_POINT = 1;
+    private static final String SAME_SCORE_SUFFIX = "-All";
+
+    private int player1Score = 0;
+    private int player2Score = 0;
+    private final String player1Name;
+    private final String player2Name;
 
     public TennisGame(String player1Name, String player2Name) {
         this.player1Name = player1Name;
@@ -13,68 +17,74 @@ public class TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            m_score1 += 1;
-        else
-            m_score2 += 1;
+        if ("player1".equals(playerName)) {
+            player1Score += ONE_POINT;
+        } else {
+            player2Score += ONE_POINT;
+        }
     }
 
     public String getScore() {
-        String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                        score = "Love-All";
-                    break;
-                case 1:
-                        score = "Fifteen-All";
-                    break;
-                case 2:
-                        score = "Thirty-All";
-                    break;
-                case 3:
-                        score = "Forty-All";
-                    break;
-                default:
-                        score = "Deuce";
-                    break;
-                
-            }
+        String tennisScore = "";
+        if (player1Score == player2Score) {
+            tennisScore = generateTennisScoreForEqualScores();
+        } else if (eitherPlayerOverFourty()) {
+            tennisScore = generateTennisScoreOverFourty();
+        } else {
+            tennisScore += convertPlayerScoreToTennisScore(player1Score);
+            tennisScore += "-";
+            tennisScore += convertPlayerScoreToTennisScore(player2Score);
         }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+        return tennisScore;
+    }
+
+    private String convertPlayerScoreToTennisScore(int score) {
+        String tennisScore;
+        switch (score) {
+            case 0:
+                tennisScore = "Love";
+                break;
+            case ONE_POINT:
+                tennisScore = "Fifteen";
+                break;
+            case 2:
+                tennisScore = "Thirty";
+                break;
+            case 3:
+                tennisScore = "Forty";
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
+        return tennisScore;
+    }
+
+    private String generateTennisScoreOverFourty() {
+        String tennisScore;
+        int minusResult = player1Score - player2Score;
+        if (minusResult == ONE_POINT) {
+            tennisScore = "Advantage player1";
+        } else if (minusResult == -1) {
+            tennisScore = "Advantage player2";
+        } else if (minusResult >= 2) {
+            tennisScore = "Win for player1";
+        } else {
+            tennisScore = "Win for player2";
         }
-        return score;
+        return tennisScore;
+    }
+
+    private boolean eitherPlayerOverFourty() {
+        return player1Score >= OVER_FOURTY || player2Score >= OVER_FOURTY;
+    }
+
+    private String generateTennisScoreForEqualScores() {
+        String convertedPlayerScoreToTennisScore;
+        try {
+            convertedPlayerScoreToTennisScore = convertPlayerScoreToTennisScore(player1Score);
+            return convertedPlayerScoreToTennisScore + SAME_SCORE_SUFFIX;
+        } catch (IllegalArgumentException iae) {
+            return "Deuce";
+        }
     }
 }
