@@ -1,9 +1,12 @@
 package ohtu.intjoukkosovellus;
 
 import java.util.Arrays;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class IntJoukkoTest {
 
@@ -20,6 +23,14 @@ public class IntJoukkoTest {
     public void lukujaLisattyMaara() {
         joukko.lisaa(4);
         assertEquals(3, joukko.mahtavuus());
+    }
+
+    @Test
+    public void lisataanJoOlevaLuku() {
+        assertFalse(joukko.lisaa(10));
+        int[] toIntArray = joukko.toIntArray();
+        int[] odotettu = {10, 3};
+        assertArrayEquals(odotettu, toIntArray);
     }
 
     @Test
@@ -42,11 +53,16 @@ public class IntJoukkoTest {
         assertFalse(joukko.kuuluu(3));
         assertEquals(1, joukko.mahtavuus());
     }
-    
+
+    @Test
+    public void poistetaanOlematon() {
+        assertFalse(joukko.poista(4));
+    }
+
     @Test
     public void palautetaanOikeaTaulukko() {
         int[] odotettu = {3, 55, 99};
-        
+
         joukko.lisaa(55);
         joukko.poista(10);
         joukko.lisaa(99);
@@ -55,11 +71,10 @@ public class IntJoukkoTest {
         Arrays.sort(vastaus);
         assertArrayEquals(odotettu, vastaus);
     }
-    
-    
+
     @Test
-    public void toimiiKasvatuksenJalkeen(){
-        int[] lisattavat = {1,2,4,5,6,7,8,9,11,12,13,14};
+    public void toimiiKasvatuksenJalkeen() {
+        int[] lisattavat = {1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14};
         for (int luku : lisattavat) {
             joukko.lisaa(luku);
         }
@@ -69,9 +84,21 @@ public class IntJoukkoTest {
         assertFalse(joukko.kuuluu(11));
         assertEquals(13, joukko.mahtavuus());
     }
-    
+
     @Test
-    public void toStringToimii(){
+    public void toStringToimii() {
         assertEquals("{10, 3}", joukko.toString());
+    }
+
+    @Test
+    public void toStringToimiiTyhjana() {
+        assertEquals("{}", new IntJoukko().toString());
+    }
+
+    @Test
+    public void toStringToimiiYhdella() {
+        IntJoukko a = new IntJoukko();
+        a.lisaa(313);
+        assertEquals("{313}", a.toString());
     }
 }

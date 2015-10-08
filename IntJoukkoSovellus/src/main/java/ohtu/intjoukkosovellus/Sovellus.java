@@ -5,16 +5,20 @@ import java.util.Scanner;
 public class Sovellus {
 
     private static IntJoukko A, B, C;
+    private static final String help = "Komennot ovat:\n"
+            + "lisää(li), poista(p), kuuluu(k),\n"
+            + "yhdiste(y), erotus(e), leikkaus(le),\n"
+            + "lopetus(quit)(q).\n"
+            + "Joukon kirjain (a/b/c) komentona tulostaa joukon.";
 
     private static String luku() {
-        Scanner lukija = new Scanner(System.in);
+        Scanner lukija = new Scanner(System.in, "utf-8");
         String luettu = lukija.nextLine();
         return luettu;
     }
 
     private static IntJoukko mikaJoukko() {
         String luettu;
-        Scanner lukija = new Scanner(System.in);
         luettu = luku();
         while (true) {
             if (luettu.equals("A") || luettu.equals("a")) {
@@ -107,6 +111,7 @@ public class Sovellus {
         return;
     }
 
+
     public static void main(String[] args) {
         A = new IntJoukko();
         B = new IntJoukko();
@@ -115,11 +120,11 @@ public class Sovellus {
 
         System.out.println("Tervetuloa joukkolaboratorioon!");
         System.out.println("Käytössäsi ovat joukot A, B ja C.");
-        System.out.println("Komennot ovat lisää(li), poista(p), kuuluu(k), yhdiste(y), erotus(e), leikkaus(le) ja lopetus(quit)(q).");
-        System.out.println("Joukon nimi komentona tarkoittaa pyyntöä tulostaa joukko.");
+        System.out.println("Komento h näyttää ohjeen.");
 
         Scanner lukija = new Scanner(System.in);
         while (true) {
+            System.out.print("> ");
             luettu = lukija.nextLine();
             if (luettu.equals("lisää") || luettu.equals("li")) {
                 lisaa();
@@ -142,11 +147,13 @@ public class Sovellus {
             } else if (luettu.equalsIgnoreCase("lopeta") || luettu.equalsIgnoreCase("quit") || luettu.equalsIgnoreCase("q")) {
                 System.out.println("Lopetetaan, moikka!");
                 break;
+            } else if (luettu.equalsIgnoreCase("h")) {
+                System.out.println(help);
             } else {
                 System.out.println("Virheellinen komento! " + luettu);
                 System.out.println("Komennot ovat lisää(li), poista(p), kuuluu(k), yhdiste(y), erotus(e) ja leikkaus(le).");
             }
-            System.out.println("Komennot ovat lisää(li), poista(p), kuuluu(k), yhdiste(y), erotus(e) ja leikkaus(le).");
+            
         }
     }
 }
